@@ -4,16 +4,22 @@
 		<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.11.1.min.js"></script>
 		<script>
 		$(document).ready(function(){
-			$("form").submit(function(){
-				alert(true);
+			$("#Flickr").submit(function(event) {
+			  var flickerAPI = "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=0ebc5e59be7e821ba7321617ef7cad43&tags=UofT&format=json&nojsoncallback=1&auth_token=72157647241452649-e6ceb34567b84291&api_sig=c32143af22361b873aafd004ab9aac8e";
+			  $.getJSON(flickerAPI, function(data){
+				console.log("Hi");
+			  });
+			  console.log("Submit");
+			  event.preventDefault();
 			});
+			console.log("Ready");
 		});
 		</script>
 	</head>
 	<body>
-		<form>
+		<form id="Flickr">
 			Enter Keyword: <input type="text" name="Keyword">
-			<input type="submit" value="Submit">
+			<input type="submit">
 		</form>
 	</body>
 </html>
@@ -34,4 +40,33 @@
       });
     });
 })();
+-->
+<!--
+$.ajax({
+	type: 'GET',	 
+	url: 'http://' + API_URL + '/property/info/' + property_id ,
+	headers: {
+		"agent-id": auth['agent_id'], 
+		"auth-token": auth['auth_token'],
+		"device-id": auth['device_id']
+	},
+	data: {
+		"listing_id": property_id
+	},
+	success : function(response){
+		// console.log(property_id);
+		// console.log(":DATA:"+ data);
+		if(response.status){
+			callback(response);
+		}else{
+			notLoggedIn(response);
+		}
+	},
+	error : function(data, str, error)
+	{
+		console.log( data );
+		console.log( str );
+		console.log( error );
+	}
+});
 -->
