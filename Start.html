@@ -4,69 +4,39 @@
 		<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.11.1.min.js"></script>
 		<script>
 		$(document).ready(function(){
-			$("#Flickr").submit(function(event) {
-			  var flickerAPI = "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=0ebc5e59be7e821ba7321617ef7cad43&tags=UofT&format=json&nojsoncallback=1&auth_token=72157647241452649-e6ceb34567b84291&api_sig=c32143af22361b873aafd004ab9aac8e";
-			  $.getJSON(flickerAPI, function(data){
-				console.log("Hi");
-			  });
-			  console.log("Submit");
-			  event.preventDefault();
+			$("form").submit(function(event) {
+				var photo;
+				var photoURL;
+				var Key = $("input:first").val();
+				var flickerAPI = "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=0ebc5e59be7e821ba7321617ef7cad43&tags="+Key+"&format=json&nojsoncallback=1";
+				$.getJSON(flickerAPI, function(data){
+					var total = data.photos.total
+					if (total == 0) {
+						console.log("No pages found with tag: " + Key);
+					}
+					else if  (total > 100){
+						total = Math.floor(Math.random()* 100);
+					}
+					else {
+						total = Math.floor(Math.random()* total);
+					}
+					photo = data.photos.photo[total];
+					photoURL = 'http://farm' + photo.farm + '.static.flickr.com/' + photo.server + '/' + photo.id + '_' + photo.secret + '_m.jpg'
+					$("#Picture").attr("src",photoURL);
+					console.log(photoURL);
+				});
+				console.log("Submit");
+				event.preventDefault();
 			});
 			console.log("Ready");
 		});
 		</script>
 	</head>
 	<body>
-		<form id="Flickr">
+		<form>
 			Enter Keyword: <input type="text" name="Keyword">
 			<input type="submit">
 		</form>
+		<img id="Picture"/>
 	</body>
 </html>
-<!--
-(function() {
-  var flickerAPI = "http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?";
-  $.getJSON( flickerAPI, {
-    tags: "mount rainier",
-    tagmode: "any",
-    format: "json"
-  })
-    .done(function( data ) {
-      $.each( data.items, function( i, item ) {
-        $( "<img>" ).attr( "src", item.media.m ).appendTo( "#images" );
-        if ( i === 3 ) {
-          return false;
-        }
-      });
-    });
-})();
--->
-<!--
-$.ajax({
-	type: 'GET',	 
-	url: 'http://' + API_URL + '/property/info/' + property_id ,
-	headers: {
-		"agent-id": auth['agent_id'], 
-		"auth-token": auth['auth_token'],
-		"device-id": auth['device_id']
-	},
-	data: {
-		"listing_id": property_id
-	},
-	success : function(response){
-		// console.log(property_id);
-		// console.log(":DATA:"+ data);
-		if(response.status){
-			callback(response);
-		}else{
-			notLoggedIn(response);
-		}
-	},
-	error : function(data, str, error)
-	{
-		console.log( data );
-		console.log( str );
-		console.log( error );
-	}
-});
--->
