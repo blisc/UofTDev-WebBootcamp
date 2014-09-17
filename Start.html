@@ -8,27 +8,33 @@
 				var photo;
 				var photoURL;
 				var Key = $("input:first").val();
-				var flickerAPI = "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=0ebc5e59be7e821ba7321617ef7cad43&tags="+Key+"&format=json&nojsoncallback=1";
+				var flickerAPI = "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=856eda8a68f69e8980fdfa8d976b5854&tags="+Key+"&per_page=200&format=json&nojsoncallback=1";
+				//console.log(flickerAPI);
 				$.getJSON(flickerAPI, function(data){
 					var total = data.photos.total
 					if (total == 0) {
-						console.log("No pages found with tag: " + Key);
+						//console.log("No pages found with tag: " + Key);
+						$("#Picture").attr("src","");
+						$("#NotFound").show();
+						return;
 					}
-					else if  (total > 100){
-						total = Math.floor(Math.random()* 100);
+					else if  (total > 200){
+						total = Math.floor(Math.random()* 200);
 					}
 					else {
 						total = Math.floor(Math.random()* total);
 					}
+					$("#NotFound").hide();
 					photo = data.photos.photo[total];
 					photoURL = 'http://farm' + photo.farm + '.static.flickr.com/' + photo.server + '/' + photo.id + '_' + photo.secret + '_m.jpg'
 					$("#Picture").attr("src",photoURL);
-					console.log(photoURL);
+					//console.log(photoURL);
 				});
-				console.log("Submit");
+				//console.log("Submit");
 				event.preventDefault();
 			});
-			console.log("Ready");
+			//console.log("Ready");
+			$("#NotFound").hide();
 		});
 		</script>
 	</head>
@@ -38,5 +44,6 @@
 			<input type="submit">
 		</form>
 		<img id="Picture"/>
+		<p id="NotFound">No pages found with tag</p>
 	</body>
 </html>
